@@ -1,0 +1,58 @@
+{
+  "parameters": {
+    "tables": {
+      "type": "Array",
+      "defaultValue": ["customers", "products", "orders", "sales", "payments"]
+    },
+    "load_type": { "type": "String", "defaultValue": "full" },
+    "run_date": { "type": "String", "defaultValue": "" }
+  },
+  "activities": [
+    {
+      "name": "ForEachTable",
+      "type": "ForEach",
+      "typeProperties": {
+        "items": { "value": "@pipeline().parameters.tables", "type": "Expression" },
+        "isSequential": false,
+        "batchCount": 5,
+        "activities": [
+          {
+            "name": "CopyLandingToBronze",
+            "type": "Copy",
+            "policy": { "timeout": "0.01:00:00", "retry": 2, "retryIntervalInSeconds": 30 },
+            "inputs": [
+              {
+                "referenceName": "ds_landing_csv",
+                "type": "DatasetReference",
+                "parameters": {
+                  "folder": {
+                    "value": "@if(equals(pipeline().parameters.load_type,'full'), concat('full/', item()), concat('incremental/', pipeline().parameters.run_date))",
+                    "type": "Expression"
+                  },
+                  "file": { "value": "@concat(item(), '.csv')", "type": "Expression" }
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "referenceName": "ds_bronze_csv",
+                "type": "DatasetReference",
+                "parameters": {
+                  "folder": {
+                    "value": "@concat(item(), '/load_date=', formatDateTime(utcnow(),'yyyy-MM-dd'))",
+                    "type": "Expression"
+                  },
+                  "file": { "value": "@concat(item(), '.csv')", "type": "Expression" }
+                }
+              }
+            ],
+            "typeProperties": {
+              "source": { "type": "DelimitedTextSource", "storeSettings": { "type": "AzureBlobFSReadSettings" } },
+              "sink": { "type": "DelimitedTextSink", "storeSettings": { "type": "AzureBlobFSWriteSettings" } }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

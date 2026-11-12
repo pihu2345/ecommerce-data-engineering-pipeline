@@ -1,0 +1,5 @@
+pandas
+faker
+azure-storage-file-datalake
+azure-identity
+requests

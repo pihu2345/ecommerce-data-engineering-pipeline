@@ -1,0 +1,7 @@
+{
+  "type": "AzureBlobFS",
+  "typeProperties": {
+    "url": "https://__STORAGE__.dfs.core.windows.net",
+    "accountKey": { "type": "SecureString", "value": "__ACCOUNT_KEY__" }
+  }
+}
