@@ -38,11 +38,4 @@ docs/                         # step-by-step guide, interview Q&A
 - SCD Type 2 customer dimension
 - `OPTIMIZE` + `ZORDER`, ADF retries, idempotent re-runs
 
-## How to run
-See [docs/STEP_BY_STEP.md](docs/STEP_BY_STEP.md).
 
-## Dashboard
-Add Power BI screenshots in `docs/` (revenue KPI, monthly trend, category, city, payment mix).
-
-## Author
-<your name> | <LinkedIn> | <GitHub>
